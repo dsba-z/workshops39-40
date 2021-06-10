@@ -33,3 +33,5 @@
 
 # CMakeLists generated file
 *.user
+
+build*
