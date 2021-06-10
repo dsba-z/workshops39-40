@@ -11,20 +11,39 @@ public:
 
     /// The default constructor.
     SafeArray()
+        : _arr(nullptr)
+        , _size(0)
     {}
 
     /// Constructor creates an array with \a sz elements of value \a def
     SafeArray(size_t sz, T def /* = ???*/)
-//      constructor delegate
+        : SafeArray()
     {
+        if (sz == 0)
+        {
+            return;
+        }
+        _size = sz;
+        _arr = new T[_size];
         
+        for (size_t i = 0; i < _size; ++i)
+        {
+            _arr[i] = def;
+        }
     }
 
     /// The copy constructor.
+    // Difference here
     SafeArray(const SafeArray& origin)
-    // ????
+        : _size(origin._size)
+      //, ????
     {
-
+//        _size = origin._size;
+        _arr = new T[_size];
+        for (size_t i = 0; i < _size; ++i)
+        {
+            _arr[i] = origin._arr[i];
+        }
     }
 
     /// Constructor with initializer list
@@ -38,7 +57,7 @@ public:
     /// The Destructor. Implements RAII closing part.
     ~SafeArray()
     {
-
+        delete [] _arr;
     }
 
 
@@ -63,20 +82,27 @@ public:
 
 
     /// Getting the ref to i-th element with no checking out of range.
-    /* <output type> */ operator [] (/* input type */) noexcept { /* ??? */ }
+    T& operator [] (size_t i) noexcept { return _arr[i]; }
     /// Const version
-    /* <output type (const)> */ operator [] (/* input type */) /*???*/ noexcept { /* ??? */ }
+//    /* <output type (const)> */ operator [] (/* input type */) /*???*/ noexcept { /* ??? */ }
 
     /// Getting the ref to i-th element with checking out of range.
     /// Regular version and const version
-    /* <output type> */ at(/* input type */)
+    T& at(size_t i)
     {
+        if (i >= _size)
+        {
+            throw std::out_of_range("Index out of range\n");
+        }
+        return _arr[i];
     }
+    /// Const version
+
 
 
     /// getters
-    // getSize()
-    // getPtr()
+    size_t getSize() const { return _size; }
+    const T* getPtr() const { return _arr; }
 
 private:
 
@@ -93,12 +119,12 @@ private:
 };// SafeArray
 
 
-template<typename T>
-std::ostream& operator << (std::ostream& s, /*input type*/)
-{
-    // write the array as [10, 20, 30]
-    // using square brackets and commas
-}
+//template<typename T>
+//std::ostream& operator << (std::ostream& s, /*input type*/)
+//{
+//    // write the array as [10, 20, 30]
+//    // using square brackets and commas
+//}
 
 
 
